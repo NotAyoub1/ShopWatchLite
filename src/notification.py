@@ -38,4 +38,15 @@ def approuver(diag: Diagnostic, reponse: str) -> bool:
         return True
     nettoyee = "".join(reponse.split()).lower()
     return nettoyee in {"o", "oui", "ok", "yes"}
- 
+
+def consigner(diag: Diagnostic, accord: bool, responsable: str,
+              carnet: list, instant: str) -> dict:
+    entree = {
+        "ref": diag.signal_ref,
+        "action": diag.action,
+        "accord": accord,
+        "responsable": responsable,
+        "instant": instant,
+    }
+    carnet.append(entree)
+    return entree 
