@@ -34,5 +34,8 @@ def diffuser(sig: Signal, diag: Diagnostic, registre: list) -> Message:
     return msg
 
 def approuver(diag: Diagnostic, reponse: str) -> bool:
-    raise NotImplementedError
-
+    if not diag.critique:
+        return True
+    nettoyee = "".join(reponse.split()).lower()
+    return nettoyee in {"o", "oui", "ok", "yes"}
+ 
