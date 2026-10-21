@@ -54,6 +54,43 @@ class TestAnalyse(unittest.TestCase):
 
     def test_evaluer_gravite_du_signal(self):
         self.assertEqual(evaluer(sig(gravite="MODERE")), "MODERE")
+
+
+
+    # diagnostiquer
+    def test_diag_inconnu_observer(self):
+        d = diagnostiquer(sig(gravite="MINEUR", texte="Service demarre"), FICHES)
+        self.assertEqual(d.cause, "Cause inconnue : verification manuelle")
+        self.assertEqual(d.action, "Observer")
+        self.assertFalse(d.critique)
+        self.assertEqual(d.origines, ["PAIEMENT"])
+
+    def test_diag_isoler_si_bloquant(self):
+        s = sig()
+        d = diagnostiquer(s, FICHES, 4)
+        self.assertEqual(d.niveau, "BLOQUANT")
+        self.assertEqual(d.action, "Isoler le service paiement")
+        self.assertTrue(d.critique)
+        self.assertEqual(s.etat, "EVALUE")
+
+    def test_diag_faille(self):
+        s = sig(categorie="FAILLE", gravite="BLOQUANT", service="lib-panier",
+                texte="Faille CVE-2026-7788 dans lib-panier")
+        d = diagnostiquer(s, FICHES)
+        self.assertEqual(d.action, "Corriger la dependance lib-panier")
+        self.assertFalse(d.critique)
+
+    def test_diag_build_echec(self):
+        s = sig(categorie="BUILD_ECHEC", service="deploiement",
+                texte="Build deploiement : echec")
+        d = diagnostiquer(s, FICHES)
+        self.assertEqual(d.action, "Rejouer le build deploiement")
+        self.assertIn(FICHES["build"], d.cause)
+
+    def test_diag_causes_multiples(self):
+        s = sig(texte="build timeout")
+        d = diagnostiquer(s, FICHES)
+        self.assertEqual(d.cause, FICHES["timeout"] + " ; " + FICHES["build"])
    
 if __name__ == "__main__":
     unittest.main()
