@@ -4,6 +4,7 @@ from src.contrat import Signal
 
 _SENSIBLES = r"(password|pwd|token|secret|card|iban)"
 _MOTIF_SENSIBLE = re.compile(_SENSIBLES + r"(\s*[=:]\s*)[^\s&,;]+", re.IGNORECASE)
+_MOTIF_BEARER = re.compile(r"(\bBearer\s+)[^\s&,;]+", re.IGNORECASE)
 _GRAVITE_JOURNAL = {
     "FATAL": "BLOQUANT",
     "CRITICAL": "BLOQUANT",
@@ -14,7 +15,8 @@ _GRAVITE_JOURNAL = {
 _GRAVITE_SCAN = {"critique": "BLOQUANT", "haut": "MAJEUR", "moyen": "MODERE"}
 
 def masquer_donnees(texte: str) -> str:
-    return _MOTIF_SENSIBLE.sub(r"\1\2[MASQUE]", texte)
+    texte = _MOTIF_SENSIBLE.sub(r"\1\2[MASQUE]", texte)
+    return _MOTIF_BEARER.sub(r"\1[MASQUE]", texte)
 
 def lire_journal(ligne: str, numero: int, origine: str = "PAIEMENT",
                  env: str = "production") -> Signal:

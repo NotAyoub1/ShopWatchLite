@@ -98,6 +98,10 @@ class TestExtraction(unittest.TestCase):
         with self.assertRaises(ValueError):
             lire_build({"etape": "tests", "resultat": "echec"}, 1)
 
+    def test_bearer(self):
+        self.assertEqual(masquer_donnees("Authorization: Bearer eyJ.abc-1"),
+                         "Authorization: Bearer [MASQUE]")
+
 
 if __name__ == "__main__":
     unittest.main()
