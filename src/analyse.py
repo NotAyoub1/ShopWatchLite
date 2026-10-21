@@ -25,4 +25,25 @@ def evaluer(sig: Signal, nb_incidents: int = 0) -> str:
     return sig.gravite
 
 def diagnostiquer(sig: Signal, base: dict, nb_incidents: int = 0) -> Diagnostic:
-    raise NotImplementedError
+    niveau = evaluer(sig, nb_incidents)
+    conseils = chercher_fiches(sig, base)
+    cause = " ; ".join(conseils) if conseils else "Cause inconnue : verification manuelle"
+
+    if sig.categorie == "FAILLE":
+        action = f"Corriger la dependance {sig.service}"
+    elif sig.categorie == "BUILD_ECHEC":
+        action = f"Rejouer le build {sig.service}"
+    elif niveau == "BLOQUANT":
+        action = f"Isoler le service {sig.service}"
+    else:
+        action = "Observer"
+
+    sig.etat = "EVALUE"
+    return Diagnostic(
+        signal_ref=sig.ref,
+        niveau=niveau,
+        cause=cause,
+        action=action,
+        critique=action.startswith("Isoler"),
+        origines=[sig.origine],
+    )
