@@ -1,9 +1,6 @@
 # ShopWatch-Lite
-
-Groupe : Groupe2-ShopWatch
-
-| Rôle | Agent | Étudiant | GitHub |
-|---|---|---|---|
-| A | Extraction | Prénom Nom | NotAyoub1 |
-| B | Analyse | Prénom Nom | Assaad |
-| C | Notification | Prénom Nom | Zakaria & Ilyas |
+Groupe : (nom du groupe)
+Mini-plateforme de supervision d'une boutique en ligne : trois agents
+(Extraction, Analyse, Notification) qui echangent via un contrat commun
+(src/contrat.py).
+## Equipe
