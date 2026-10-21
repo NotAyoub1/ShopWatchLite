@@ -14,7 +14,7 @@ _GRAVITE_JOURNAL = {
 _GRAVITE_SCAN = {"critique": "BLOQUANT", "haut": "MAJEUR", "moyen": "MODERE"}
 
 def masquer_donnees(texte: str) -> str:
-    raise _MOTIF_SENSIBLE.sub(r"\1\2[MASQUE]", texte)
+    return _MOTIF_SENSIBLE.sub(r"\1\2[MASQUE]", texte)
 
 def lire_journal(ligne: str, numero: int, origine: str = "PAIEMENT",
                  env: str = "production") -> Signal:
